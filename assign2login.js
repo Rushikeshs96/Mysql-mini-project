@@ -10,5 +10,5 @@ app.get('/login',function(req,res){
     res.sendFile(__dirname+"/assign2login.html");
 });
 app.get('*',function(req,res){
-    res.send(<h1>hello</h1>);
+    res.send("<h1>hello</h1>");
 });
