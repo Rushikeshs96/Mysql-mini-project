@@ -1,0 +1,197 @@
+create database limitless;
+use limitless;
+
+create table clients
+(
+  id int auto_increment primary key,
+  client_first_name varchar(20),
+  client_last_name varchar(20),
+  client_email varchar(30),
+  client_contact int,
+  preffer_location varchar(15),
+  preffer_no_bedroom int,
+  budget decimal(10,2) 
+);
+
++--------------------+---------------+------+-----+---------+----------------+
+| Field              | Type          | Null | Key | Default | Extra          |
++--------------------+---------------+------+-----+---------+----------------+
+| id                 | int           | NO   | PRI | NULL    | auto_increment |
+| client_first_name  | varchar(20)   | YES  |     | NULL    |                |
+| client_last_name   | varchar(20)   | YES  |     | NULL    |                |
+| client_email       | varchar(30)   | YES  |     | NULL    |                |
+| client_contact     | int           | YES  |     | NULL    |                |
+| preffer_location   | varchar(15)   | YES  |     | NULL    |                |
+| preffer_no_bedroom | int           | YES  |     | NULL    |                |
+| budget             | decimal(10,2) | YES  |     | NULL    |                |
++--------------------+---------------+------+-----+---------+----------------+
+
+
+
+
+create table regions
+(
+ id int auto_increment primary key,
+ region_name varchar(15)
+);
+
++-------------+-------------+------+-----+---------+----------------+
+| Field       | Type        | Null | Key | Default | Extra          |
++-------------+-------------+------+-----+---------+----------------+
+| id          | int         | NO   | PRI | NULL    | auto_increment |
+| region_name | varchar(15) | YES  |     | NULL    |                |
++-------------+-------------+------+-----+---------+----------------+
+ 
+
+
+
+create table cities
+(
+ id int auto_increment primary key,
+ city_name varchar(15)
+);
+
++-----------+-------------+------+-----+---------+----------------+
+| Field     | Type        | Null | Key | Default | Extra          |
++-----------+-------------+------+-----+---------+----------------+
+| id        | int         | NO   | PRI | NULL    | auto_increment |
+| city_name | varchar(15) | YES  |     | NULL    |                |
++-----------+-------------+------+-----+---------+----------------+
+
+
+
+
+
+create table addresses
+(
+ id int auto_increment,
+ city_id int,
+ region_id int,
+ 
+constraint pk_address_id primary key(id),
+constraint fk_city_id foreign key(city_id) references cities(id),
+constraint fk_region_id foreign key(region_id) references regions(id) 
+);
+
+
++-----------+------+------+-----+---------+----------------+
+| Field     | Type | Null | Key | Default | Extra          |
++-----------+------+------+-----+---------+----------------+
+| id        | int  | NO   | PRI | NULL    | auto_increment |
+| city_id   | int  | YES  | MUL | NULL    |                |
+| region_id | int  | YES  | MUL | NULL    |                |
++-----------+------+------+-----+---------+----------------+
+
+
+
+
+
+create table agents
+(
+id int auto_increment primary key,
+agent_first_name varchar(10),
+agent_last_name varchar(10),
+agent_email varchar(30),
+agent_contact int,
+agent_location int,
+constraint fk_agent_location foreign key(agent_location) references regions(id)
+);
+
++------------------+-------------+------+-----+---------+----------------+
+| Field            | Type        | Null | Key | Default | Extra          |
++------------------+-------------+------+-----+---------+----------------+
+| id               | int         | NO   | PRI | NULL    | auto_increment |
+| agent_first_name | varchar(10) | YES  |     | NULL    |                |
+| agent_last_name  | varchar(10) | YES  |     | NULL    |                |
+| agent_email      | varchar(30) | YES  |     | NULL    |                |
+| agent_contact    | int         | YES  |     | NULL    |                |
+| agent_location   | int         | YES  | MUL | NULL    |                |
++------------------+-------------+------+-----+---------+----------------+
+
+
+
+
+create table properties
+(
+ id int auto_increment primary key,
+ property_name varchar(30),
+ price decimal(10,2),
+ no_of_bedrooms int,
+ flat_available int,
+carpet_area int,
+amenities varchar(100),
+agent_id int,
+city_id int,
+ region_id int,
+constraint fk_agent_id foreign key(agent_id) references agents(id),
+constraint fk_city_id1 foreign key(city_id) references cities(id),
+constraint fk_region_id1 foreign key(region_id) references regions(id)
+);
+
++----------------+---------------+------+-----+---------+----------------+
+| Field          | Type          | Null | Key | Default | Extra          |
++----------------+---------------+------+-----+---------+----------------+
+| id             | int           | NO   | PRI | NULL    | auto_increment |
+| property_name  | varchar(30)   | YES  |     | NULL    |                |
+| price          | decimal(10,2) | YES  |     | NULL    |                |
+| no_of_bedrooms | int           | YES  |     | NULL    |                |
+| flat_available | int           | YES  |     | NULL    |                |
+| carpet_area    | int           | YES  |     | NULL    |                |
+| amenities      | varchar(100)  | YES  |     | NULL    |                |
+| agent_id       | int           | YES  | MUL | NULL    |                |
+| city_id        | int           | YES  | MUL | NULL    |                |
+| region_id      | int           | YES  | MUL | NULL    |                |
++----------------+---------------+------+-----+---------+----------------+
+
+
+
+
+create table sales
+(
+   id int auto_increment primary key,
+   property_id int,
+   client_id int,
+   
+   agent_id int,
+   sale_price decimal(10,2),
+   sale_date date,
+   constraint fk_property_id foreign key(property_id) references properties(id),
+   constraint fk_client_id foreign key(client_id) references clients(id),
+   constraint fk_agent_id1 foreign key(agent_id) references agents(id)
+);
+
++-------------+---------------+------+-----+---------+----------------+
+| Field       | Type          | Null | Key | Default | Extra          |
++-------------+---------------+------+-----+---------+----------------+
+| id          | int           | NO   | PRI | NULL    | auto_increment |
+| property_id | int           | YES  | MUL | NULL    |                |
+| client_id   | int           | YES  | MUL | NULL    |                |
+| agent_id    | int           | YES  | MUL | NULL    |                |
+| sale_price  | decimal(10,2) | YES  |     | NULL    |                |
+| sale_date   | date          | YES  |     | NULL    |                |
++-------------+---------------+------+-----+---------+----------------+
+
+
+
+
+create table admins
+(
+  id int auto_increment primary key,
+  admin_first_name varchar(10),
+  admin_last_name varchar(10),
+  admin_email varchar(20),
+  admin_login_id int,
+  admin_password varchar(10)
+);
+
+
++------------------+-------------+------+-----+---------+----------------+
+| Field            | Type        | Null | Key | Default | Extra          |
++------------------+-------------+------+-----+---------+----------------+
+| id               | int         | NO   | PRI | NULL    | auto_increment |
+| admin_first_name | varchar(10) | YES  |     | NULL    |                |
+| admin_last_name  | varchar(10) | YES  |     | NULL    |                |
+| admin_email      | varchar(20) | YES  |     | NULL    |                |
+| admin_login_id   | int         | YES  |     | NULL    |                |
+| admin_password   | varchar(10) | YES  |     | NULL    |                |
++------------------+-------------+------+-----+---------+----------------+
